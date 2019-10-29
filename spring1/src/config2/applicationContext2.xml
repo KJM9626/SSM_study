@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xmlns:context="http://www.springframework.org/schema/context"
+			xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<context:property-placeholder location="classpath:config2/dbconfig.properties"/>
+<bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dSource">
+<!--  -->
+<property name="user" value="${jdbc.username}"></property>
+<property name="password" value="${jdbc.password}"></property>
+<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+<property name="driverClass" value="${jdbc.driverClass}"></property>
+</bean>
+
+<bean class="com.spring1.demo.Car" id="car">
+<property name="carName" value="Benz"></property>
+<property name="color" value="black"></property>
+</bean>
+<!-- <bean class="com.spring1.demo.Car" id="car1">
+<property name="carName" value="BMW"></property>
+<property name="color" value="black"></property>
+</bean> -->
+<!-- 自动装配 -->
+<bean class="com.spring1.demo.Person" id="person1" autowire="byType">
+<!--手动赋值  
+<property name="car" ref="car"></property>
+-->
+</bean>
+<bean class="com.spring1.demo.Book" id="book1">
+<property name="bookName" value="18.9"></property>
+</bean>
+<bean class="com.spring1.demo.Book" id="book2">
+<property name="bookName" value="21.4"></property>
+</bean>
+<bean class="com.spring1.demo.Book" id="book3">
+<property name="bookName" value="67.2"></property>
+</bean>
+
+<!-- <context:component-scan base-package="com.spring1.ssd" use-default-filters="false">
+<context:exclude-filter type="assignable" expression="com.spring1.ssd.dao.BookDao"/>
+<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+</context:component-scan> -->
+
+<!-- <context:component-scan base-package="com.spring1.ssd"></context:component-scan>
+ -->
+ <context:component-scan base-package="com.spring1.generic"></context:component-scan>
+
+
+</beans>

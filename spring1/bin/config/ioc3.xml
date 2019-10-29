@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- bean之间的依赖：实质上只是改变创建顺序 -->
+<!-- <bean class="com.spring1.demo.Car" id="car" depends-on="book,person"></bean>
+<bean class="com.spring1.demo.Person" id="person"></bean>
+<bean class="com.spring1.demo.Book" id="book"></bean> -->
+
+<bean class="com.spring1.demo.Person" id="person1" scope="prototype"></bean>
+<bean class="com.spring1.demo.Book" id="book1"></bean>
+
+<bean id="sf" class="com.spring1.factory.AirPlaneStaticFactory" factory-method="getAirPlane">
+<constructor-arg value="Mike"></constructor-arg>
+</bean>
+<bean id="InstanceFactory" class="com.spring1.factory.AirPlaneInstanceFactory" ></bean>
+<bean id="ap" class="com.spring1.demo.AirPlane" factory-bean="InstanceFactory" factory-method="getAirPlane">
+<constructor-arg value="jack"></constructor-arg>
+</bean>
+
+<bean class="com.spring1.factory.MyFactoryBeanImpl" id="myFactoryBeanImpl">
+
+</bean>
+</beans>

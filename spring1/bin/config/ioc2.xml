@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xmlns:p="http://www.springframework.org/schema/p"
+			xmlns:util="http://www.springframework.org/schema/util"
+			xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+<!--正确为各种属性赋值  -->
+<bean class="com.spring1.demo.Car" id="car1">
+<property name="carName" value="宝马"></property>
+<property name="price" value="747378"></property>
+<property name="color" value="black"></property>
+</bean>
+
+<bean id="book1" class="com.spring1.demo.Book">
+<property name="bookName" value="东游记"></property>
+<property name="price" value="78.78"></property>
+</bean>
+
+<bean class="com.spring1.demo.Person" id="person1">
+<property name="name">
+<!-- 为属性赋值为null，注意不是在property属性中的value赋值为null -->
+<null></null>
+</property>
+<!-- 为对象属性赋值,两种方法：一种是通过ref引用外部bean标签，另一种就是property标签里定义bean标签 -->
+<!-- <property name="car" ref="car1"></property> -->
+<property name="car">
+<bean class="com.spring1.demo.Car">
+<property name="carName" value="奔驰"></property>
+<property name="price" value="45668"></property>
+</bean>
+</property>
+<!--为List,Map,Property等类型赋值-->
+<property name="books">
+<!--list标签中添加多个元素 -->
+<list>
+<bean class="com.spring1.demo.Book" p:author="吴承恩" p:bookName="西游记" p:price="89.23"></bean>
+<!-- 外部引用元素 -->
+<ref bean="book1"/>
+</list>
+</property>
+<property name="map" ref="map1">
+<!-- 相当于map=new HashMap()-->
+<!-- <map>
+一个entry代表一个键值对 
+<entry key="key1" value="helloworld"></entry>
+<entry key="key2" value-ref="book1"></entry>
+<entry key="key3">
+<bean class="com.spring1.demo.Car">
+<property name="carName" value="Benz"></property>
+<property name="price" value="78989"></property>
+</bean>
+</entry>
+</map> -->
+</property>
+<property name="properties">
+<!-- properties中的键值对都是string类型 -->
+<props>
+<prop key="username">admin</prop>
+<prop key="password">63774838</prop>
+</props>
+</property>
+</bean>
+
+<!-- util名称空间创建集合类型的bean,方便别人引用 -->
+<util:map id="map1">
+<entry key="key1" value="helloworld"></entry>
+<entry key="key2" value-ref="book1"></entry>
+<entry key="key3">
+<bean class="com.spring1.demo.Car">
+<property name="carName" value="Benz"></property>
+<property name="price" value="78989"></property>
+</bean>
+</entry>
+</util:map>
+
+<!-- abstract="true":表示这个bean的是一个抽象的，不能获取他的实例，只能被别人继承 -->
+<bean class="com.spring1.demo.Person" id="person2" abstract="true">
+<property name="name" value="jack"></property>
+<property name="age" value="63"></property>
+<property name="gender" value="女"></property>
+<property name="email" value="76r38493@qq.com"></property>
+</bean>
+
+<bean id="person3" parent="person2">
+<property name="name" value="joe"></property>
+</bean>
+</beans>
