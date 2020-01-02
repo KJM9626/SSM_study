@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- namespace:名称空间，写接口的全类名，相当于告诉mybatis这个配置文件是实现哪个接口的 -->
+<mapper namespace="com.study.dao.KeyDao">
+<!-- 使用mybatis自带的缓存机制 -->
+<cache></cache>
+
+<resultMap type="com.study.bean.Key" id="myKey">
+<id column="id" property="id"/>
+<result column="keyName" property="keyName"/>
+<!-- association表示联合了一个对象，javaType指定这个属性的类型 -->
+<association property="lock" javaType="com.study.bean.Lock">
+<id property="id" column="lid"/>
+<result property="lockName" column="lockName"/>
+</association>
+</resultMap>
+
+<resultMap type="com.study.bean.Key" id="myKey2">
+<id column="id" property="id"/>
+<result column="keyName" property="keyName"/>
+<!-- 分步查询 -->
+<!-- select:指定一个查询SQL的唯一标识，mybatis自动调用指定的SQL将查出的lock封装进来
+column：指定将哪一列的数据传递过去 -->
+<association property="lock" select="com.study.dao.LockDao.getLockByIdSimple" column="lockId"></association>
+</resultMap>
+
+<select id="getKeyById" resultMap="myKey">
+select k.id,k.keyName,l.id lid,l.lockName from t_key k inner join t_lock l on k.lockId=l.id where k.id=#{id}
+</select>
+
+<select id="getKeyByIdSimple" resultMap="myKey2">
+select * from t_key where id=#{id}
+</select>
+
+<select id="getKeyByLockId" resultType="com.study.bean.Key">
+select * from t_key where lockId=#{id}
+</select>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- namespace:名称空间，写接口的全类名，相当于告诉mybatis这个配置文件是实现哪个接口的 -->
+<mapper namespace="com.study.dao.TeacherDao">
+<!-- 使用自定义的缓存机制 -->
+<cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+<resultMap type="com.study.bean.Teacher" id="myTea">
+<id property="id" column="id"/>
+<result property="teacher" column="teacher_name"/>
+<result property="course" column="class_name"/>
+<result property="address" column="address"/>
+<result property="date" column="birth_date"/>
+</resultMap>
+
+<sql id="selectSql">
+select t.id,t.teacher_name,t.birth_date,t.class_name from t_teacher t
+</sql>
+<select id="getTeacherById" resultMap="myTea">
+<include refid="selectSql"></include> where id=#{id}
+</select>
+
+<select id="getTeacherByCondition" resultMap="myTea">
+select t.id,t.teacher_name,t.birth_date,t.class_name from t_teacher t
+<where>
+<if test="id!=null">
+and id &lt; #{id}
+</if>
+<!-- test="",编写判断条件id!=null，取出传入的JavaBean属性中的 id的值，判断其是否为空-->
+<if test="teacher!=null and !teacher.equals(&quot;&quot;)">
+and teacher_name like #{teacher}
+</if>
+<if test="date!=null">
+and birth_date &lt; #{date}
+</if>
+</where>
+</select>
+
+<select id="getTeachers" resultMap="myTea">
+select * from t_teacher where id in
+<!-- collection：指定要遍历的集合的key
+close：以什么结束
+index：索引；如果遍历的是一个list，index：指定的变量保存了当前索引  ,item： 保存当前遍历的元素的值;如果遍历的是一个map，index：指定的变量就是保存了当前遍历的元素的key，item：就是保存当前遍历的元素的值
+item：每次遍历出的元素起一个变量名方便引用
+open：以什么开始
+separator：每次遍历的元素的分隔符 -->
+<foreach collection="ids" close=")" index="" item="id_item" open="(" separator=",">
+#{id_item}
+</foreach>
+</select>
+
+<select id="getTeacherByConditionChoose" resultMap="myTea">
+select * from t_teacher
+<where>
+<!-- choose等同于多个if-else，但是区别的是choose中前面只要有一个符合，后面就不会遍历验证 -->
+<choose>
+<when test="id!=null">
+id=#{id}
+</when>
+<when test="teacher!=null and !teacher.equals(&quot;&quot;)">
+teacher_name=#{teacher}
+</when>
+<when test="date!=null">
+birth_date=#{date}
+</when>
+<otherwise>
+1=1
+</otherwise>
+</choose>
+</where>
+</select>
+
+<update id="updateTeacher" useGeneratedKeys="true" keyProperty="id">
+update t_teacher 
+<set>
+<!-- test="",编写判断条件id!=null，取出传入的JavaBean属性中的 id的值，判断其是否为空-->
+<if test="teacher!=null and !teacher.equals(&quot;&quot;)">
+teacher_name= #{teacher},
+</if>
+<if test="course!=null and !course.equals(&quot;&quot;)">
+class_name= #{course},
+</if>
+<if test="address!=null and !address.equals(&quot;&quot;)">
+address= #{address},
+</if>
+<if test="date!=null">
+birth_date=#{date}
+</if>
+</set>
+<where>
+id=#{id}
+</where>
+</update>
+
+<insert id="insertBatch">
+insert into t_teacher(teacher_name,class_name) values
+<foreach collection="teachers" item="tea" separator=",">
+(#{tea.teacher},#{tea.course})
+</foreach>
+
+</insert>
+
+<!-- <select id="getTeacherByCondition" resultMap="myTea">
+select t.id,t.teacher_name,t.birth_date,t.class_name from t_teacher t
+prefix：前缀，为我们下面的sql整体添加一个前缀
+prefixOverrides：取出整体字符串前面多余的字符
+suffix：为整体添加一个后缀
+suffixOverrides：后面哪个多了可以去掉
+<trim prefix="where" prefixOverrides="and" suffixOverrides="and">
+<if test="id!=null">
+id &lt; #{id}
+</if>
+test="",编写判断条件id!=null，取出传入的JavaBean属性中的 id的值，判断其是否为空
+<if test="teacher!=null and !teacher.equals(&quot;&quot;)">
+and teacher_name like #{teacher}
+</if>
+<if test="date!=null">
+and birth_date &lt; #{date}
+</if>
+</trim>
+</select> -->
+</mapper>

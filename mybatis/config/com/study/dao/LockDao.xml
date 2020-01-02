@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- namespace:名称空间，写接口的全类名，相当于告诉mybatis这个配置文件是实现哪个接口的 -->
+  <mapper namespace="com.study.dao.LockDao">
+  
+  <resultMap type="com.study.bean.Lock" id="myLock">
+  <id property="id" column="id"/>
+  <result property="lockName" column="lockName"/>
+  <!--ofType:指定集合里面元素的类型  -->
+  <collection property="keys" ofType="com.study.bean.Key">
+  <id property="id" column="kid"/>
+  <result property="keyName" column="keyName"/>
+  </collection>
+  </resultMap>
+  
+  <resultMap type="com.study.bean.Lock" id="mylock2">
+    <id property="id" column="id"/>
+  <result property="lockName" column="lockName"/>
+  <collection property="keys" select="com.study.dao.KeyDao.getKeyByLockId" column="id"></collection>
+  </resultMap>
+  
+  <select id="getLockById" resultMap="myLock">
+  select l.id,l.lockName,k.id kid,k.keyName from t_lock l inner join t_key k on l.id=k.lockId where l.id=#{id}
+  </select>
+  
+  <select id="getLockByIdSimple" resultType="com.study.bean.Lock">
+  select * from t_lock where id=#{id}
+  </select>
+  
+  <select id="getLockByStep" resultMap="mylock2">
+  select * from t_lock where id=#{id}
+  </select>
+  </mapper>
+  
