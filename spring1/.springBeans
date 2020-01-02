@@ -13,6 +13,7 @@
 		<config>src/config2/applicationContext2.xml</config>
 		<config>src/config2/applicationContext3.xml</config>
 		<config>src/config2/applicationContext4.xml</config>
+		<config>src/config2/tx.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

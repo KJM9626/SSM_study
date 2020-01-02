@@ -18,6 +18,7 @@
 <property name="driverClass" value="${jdbc.driverClass}"></property>
 </bean>
 
+<!--配置JdbcTemplate操作数据库  -->
 <bean class="org.springframework.jdbc.core.JdbcTemplate" id="jdbcTem">
 <constructor-arg name="dataSource" ref="dSource"></constructor-arg>
 </bean>

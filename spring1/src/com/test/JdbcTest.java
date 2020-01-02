@@ -1,5 +1,6 @@
 package com.test;
 
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,9 +16,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.spring2.ioc.dao.MessageDao;
 import com.spring2.ioc.demo.Message;
+import com.spring2.ioc.service.BookService;
+import com.spring2.ioc.service.MulService;
 import com.sun.media.jfxmedia.control.VideoDataBuffer;
 
 public class JdbcTest {
@@ -25,6 +29,7 @@ public class JdbcTest {
 	private ApplicationContext ab = new ClassPathXmlApplicationContext("config2/applicationContext4.xml");
 	JdbcTemplate jdbcBean = ab.getBean(JdbcTemplate.class);
 	NamedParameterJdbcTemplate named = ab.getBean(NamedParameterJdbcTemplate.class);
+	private ApplicationContext ac = new ClassPathXmlApplicationContext("config2/tx.xml");
 
 	@Test
 	public void test() throws SQLException {
@@ -102,5 +107,19 @@ public class JdbcTest {
 		message.setDescription("这是一张北京到广州的车票");
 		int saveMessage = bean.saveMessage(message);
 		System.out.println(saveMessage);
+	}
+	@Test
+	public void test7() {
+		BookService bean = ac.getBean(BookService.class);
+//		bean.checkOut("Mike", "ISBN-002");
+		int price = bean.getPrice("ISBN-001");
+		System.out.println(price);
+//		System.out.println(bean.getClass());
+	}
+	
+	@Test
+	public void test8() {
+		MulService mulService=ac.getBean(MulService.class);
+		mulService.mulTx();
 	}
 }
